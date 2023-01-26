@@ -95,7 +95,7 @@ total1 = 0
 total2 = 0
 total3 = 0
 data = []
-n = 10000000
+n = 1000
 k = 100
 
 data1 = [i for i in range(0, n)]
@@ -142,7 +142,7 @@ plot.show()
 total1 = 0
 total2 = 0
 total3 = 0
-n = 10000000
+
 k = 100
 
 data1 = [i for i in range(0, n)]
@@ -176,6 +176,7 @@ for j in range(n):
 print("Method 1: ", total1/n)
 print("Method 2: ", total2/n)
 print("Method 3: ", total3/n)
+
 
 plot.plot(data1)
 plot.show()
