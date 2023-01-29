@@ -7,51 +7,53 @@ def create_random_list(length, max_value):
     for _ in range(length):
         L.append(random.randint(0, max_value))
     return L
+
+def create_near_sorted_list(length, max_value, swaps):
+    L = create_random_list(length, max_value)
+    L.sort()
+    for _ in range(swaps):
+        r1 = random.randint(0, length - 1)
+        r2 = random.randint(0, length - 1)
+        swap(L, r1, r2)
+    return L
+    
+def create_reversed_sorted_list(length,max_value):
+    L = create_random_list(length, max_value)
+    L.sort()
+    L.reverse()
+    return L
     
 def swap(L, i, j):
     L[i], L[j] = L[j], L[i]
 
-#------------------------bad bubble sort-------------------------
+#------------------------bubble sort---------------------------
 def bubble_sort(L):
     for i in range(len(L)):
         for j in range(len(L) - 1):
             if L[j] > L[j+1]:
                 swap(L, j, j+1)
 
-#------------------------bubble sort2----------------------------
-'''def bubble_sort2(L):
-    position=len(L)
-    for i in range(position):
-        flag = False
-        for j in range(0,position-1):
-            if L[j] > L[j+1]:
-                position = j+1
-                swap(L, j, j+1)
-                flag = True
-        if flag == False:
-            return L
-        i = position
-    return L
-'''
-
+#------------------------bubble sort2---------------------------
 def bubble_sort2(L):
     for i in range(len(L)):
+        #se a flage to track if any change is made
         flag=False
         for j in range(len(L)-i-1):
             if L[j] > L[j+1]:
                 flag=True
                 val = L[j+1]
                 k = j 
+                # find the better position to insert instead of a single swap.
                 while k >= 0 and L[k] > val:
                     L[k+1] = L[k]
                     k -= 1
-                L[k+1] = val       
+                L[k+1] = val  
+        # if no change made, then list already sorted, return
         if flag == False:
             return
     return
-    
 
-#---------------------bad selection sort-------------------------
+#---------------------selection sort----------------------------
 def selection_sort(L):
     for i in range(len(L)):
         min_index = find_min_index(L, i)
@@ -63,63 +65,36 @@ def find_min_index(L, n):
         if L[i] < L[min_index]:
             min_index = i
     return min_index
-
+    
 #-----------------------selection sort2--------------------------
 def selection_sort2(L):
     for i in range (len(L)//2):
         min_val = L[i]
         max_val = L[i]
-        min_i = i
-        max_i = i
+        min_index = i
+        max_index = i
         for j in range(i, len(L)-i, 1):
-            if (L[j] > L[max_i]):
+            if (L[j] > max_val):
                 max_val = L[j]
-                max_i = j
-            elif (L[j] < L[min_i]):
+                max_index = j
+            elif (L[j] < min_val):
                 min_val = L[j]
-                min_i = j
+                min_index = j
         # swap the min to the right place. 
-        swap(L,i,min_i)
-        ## if we swaped max value with min_i before, then max value is at min_i now, we need to check and swap back.
-        if (L[min_i] == max_val):
-            swap(L,min_i,len(L)-i-1)
+        swap(L,i,min_index)
+        # if we swaped max value with min_i before, then max value is at min_i now, we need to check and swap back.
+        if (L[min_index] == max_val):
+            swap(L,min_index,len(L)-i-1)
         else:
-            swap(L,max_i,len(L)-i-1)
+            swap(L,max_index,len(L)-i-1)
+            
+            
+#---------------------test function-----------------------------
 
-'''def selection_sort2(L):
-    for i in range (len(L)//2):
-        min_max=find_max_min_index(L,i,len(L)-i)
-        min_i = min_max[0]
-        max_i = min_max[1]
-        max_val=min_max[2]
-        # swap the min to the right place. 
-        
-        swap(L,i,min_i)
- 
-        ## if we swaped max value with min_i before, then max value is at min_i now, we need to check and swap back. 
-        if (L[min_i] == max_val):
-            swap(L,min_i,len(L)-i-1)
-        else:
-            swap(L,max_i,len(L)-i-1)
-    return L
-    
-def find_max_min_index(L, left,right):
-    min_val = L[left]
-    max_val = L[left]
-    min_i = left
-    max_i = left
-    for i in range(left, right, 1):
-            if (L[i] > L[max_i]):
-                max_val = L[i]
-                max_i = i
-            elif (L[i] < L[min_i]):
-                min_val = L[i]
-                min_i = i
-    return [min_i,max_i,max_val]
-'''
+#----------------------bubble sort test sunction----------------
 
-#---------------------test function-------------------------
-def bubble_sort_test(n,trials):
+#---------------------random list---------------------------
+def bubble_sort_test_random(n,trials):
     t = []
     for i in range(1,n):
         time = 0
@@ -132,7 +107,7 @@ def bubble_sort_test(n,trials):
         t.append(time/trials)
     return t;
     
-def bubble_sort2_test(n,trials):
+def bubble_sort2_test_random(n,trials):
     t = []
     for i in range(1,n):
         time = 0
@@ -145,7 +120,91 @@ def bubble_sort2_test(n,trials):
         t.append(time/trials)
     return t;
 
-def selection_sort_test(n,trials):
+#---------------------near sorted list---------------------------
+def bubble_sort_test_near(n,trials):
+    t = []
+    for i in range(1,n):
+        time = 0
+        for j in range(trials):
+            L = create_near_sorted_list(i,100,i//4)
+            start = timeit.default_timer()
+            bubble_sort(L)
+            end = timeit.default_timer()
+            time += end - start 
+        t.append(time/trials)
+    return t;
+    
+def bubble_sort2_test_near(n,trials):
+    t = []
+    for i in range(1,n):
+        time = 0
+        for j in range(trials):
+            L = create_near_sorted_list(i,100,i//4)
+            start = timeit.default_timer()
+            bubble_sort2(L)
+            end = timeit.default_timer()
+            time += end - start 
+        t.append(time/trials)
+    return t;
+    
+#---------------------reversed sorted list---------------------------
+def bubble_sort_test_reversed(n,trials):
+    t = []
+    for i in range(1,n):
+        time = 0
+        for j in range(trials):
+            L = create_reversed_sorted_list(i,100)
+            start = timeit.default_timer()
+            bubble_sort(L)
+            end = timeit.default_timer()
+            time += end - start 
+        t.append(time/trials)
+    return t;
+    
+def bubble_sort2_test_reversed(n,trials):
+    t = []
+    for i in range(1,n):
+        time = 0
+        for j in range(trials):
+            L = create_reversed_sorted_list(i,100)
+            start = timeit.default_timer()
+            bubble_sort2(L)
+            end = timeit.default_timer()
+            time += end - start 
+        t.append(time/trials)
+    return t;
+    
+#---------------------Sorted list---------------------------
+def bubble_sort_test_sorted(n,trials):
+    t = []
+    for i in range(1,n):
+        time = 0
+        for j in range(trials):
+            L = create_near_sorted_list(i,100,0)
+            start = timeit.default_timer()
+            bubble_sort(L)
+            end = timeit.default_timer()
+            time += end - start 
+        t.append(time/trials)
+    return t;
+    
+def bubble_sort2_test_sorted(n,trials):
+    t = []
+    for i in range(1,n):
+        time = 0
+        for j in range(trials):
+            L = create_near_sorted_list(i,100,0)
+            start = timeit.default_timer()
+            bubble_sort2(L)
+            end = timeit.default_timer()
+            time += end - start 
+        t.append(time/trials)
+    return t;
+    
+
+#----------------------selection sort test sunction----------------
+#---------------------random list---------------------------
+def selection_sort_test_random(n,trials):
     t = []
     for i in range(1,n):
         time = 0
@@ -158,7 +217,7 @@ def selection_sort_test(n,trials):
         t.append(time/trials)
     return t;
     
-def selection_sort2_test(n,trials):
+def selection_sort2_test_random(n,trials):
     t = []
     for i in range(1,n):
         time = 0
@@ -171,49 +230,163 @@ def selection_sort2_test(n,trials):
         t.append(time/trials)
     return t;
     
+#---------------------near sorted list----------------------
+def selection_sort_test_near(n,trials):
+    t = []
+    for i in range(1,n):
+        time = 0
+        for j in range(trials):
+            L = create_near_sorted_list(i,100,i//4)
+            start = timeit.default_timer()
+            selection_sort(L)
+            end = timeit.default_timer()
+            time += end - start 
+        t.append(time/trials)
+    return t;
+    
+def selection_sort2_test_near(n,trials):
+    t = []
+    for i in range(1,n):
+        time = 0
+        for j in range(trials):
+            L = create_near_sorted_list(i,100,i//4)
+            start = timeit.default_timer()
+            selection_sort2(L)
+            end = timeit.default_timer()
+            time += end - start 
+        t.append(time/trials)
+    return t;
+#-------------------reversed sorted list---------------------
+def selection_sort_test_reversed(n,trials):
+    t = []
+    for i in range(1,n):
+        time = 0
+        for j in range(trials):
+            L = create_reversed_sorted_list(i,100)
+            start = timeit.default_timer()
+            selection_sort(L)
+            end = timeit.default_timer()
+            time += end - start 
+        t.append(time/trials)
+    return t;
+    
+def selection_sort2_test_reversed(n,trials):
+    t = []
+    for i in range(1,n):
+        time = 0
+        for j in range(trials):
+            L = create_reversed_sorted_list(i,100)
+            start = timeit.default_timer()
+            selection_sort2(L)
+            end = timeit.default_timer()
+            time += end - start 
+        t.append(time/trials)
+    return t;
+    
+#--------------------sorted list---------------------------
+def selection_sort_test_sorted(n,trials):
+    t = []
+    for i in range(1,n):
+        time = 0
+        for j in range(trials):
+            L = create_near_sorted_list(i,100,0)
+            start = timeit.default_timer()
+            selection_sort(L)
+            end = timeit.default_timer()
+            time += end - start 
+        t.append(time/trials)
+    return t;
+    
+def selection_sort2_test_sorted(n,trials):
+    t = []
+    for i in range(1,n):
+        time = 0
+        for j in range(trials):
+            L = create_near_sorted_list(i,100,0)
+            start = timeit.default_timer()
+            selection_sort2(L)
+            end = timeit.default_timer()
+            time += end - start 
+        t.append(time/trials)
+    return t;
+    
+#---------------------plot------------------------------
 
-#---------------------plot-------------------------
-arr=[[1, 2, 3, 4], [1, 2 ,4, 3], [2, 1, 3, 4],[2, 1, 4, 3] ,[1, 2, 0, 1], [1, 2, 1, 0], [2, 1, 0, 1],[2, 1, 1, 0],[3, 4, 2, 1],                           
-[3, 4, 1, 2],[4, 3, 2, 1],[4, 3, 1, 2],[1, 1, 1, 1]]
+#---------------------bubble sort plot------------------
 
-
-plot.rcParams["figure.figsize"] = (13,5)
-plot.figure()
-
-plot.subplot(1,2,1)
-plot.plot(bubble_sort_test(500,10),label="bubble sort")
-plot.plot(bubble_sort2_test(500,10),label="bubble sort2")
+#----------------------random list----------------------
+plot.figure("figure 2.1")
+plot.plot(bubble_sort_test_random(500,10),label="bubble sort")
+plot.plot(bubble_sort2_test_random(500,10),label="bubble sort2")
+plot.xlabel("list length")
+plot.ylabel("time")
+plot.title("Bubble sort (random list)")
 plot.legend()
-
-plot.subplot(1,2,2)
-plot.plot(selection_sort_test(500,10),label="selection sort")
-plot.plot(selection_sort2_test(500,10),label="selection sort2")
+plot.show()
+#----------------------near sorted list----------------------
+plot.figure("figure 2.2")
+plot.plot(bubble_sort_test_near(500,10),label="bubble sort")
+plot.plot(bubble_sort2_test_near(500,10),label="bubble sort2")
+plot.xlabel("list length")
+plot.ylabel("time")
+plot.title("Bubble sort (near sorted list)")
 plot.legend()
-
+plot.show()
+#----------------------reverded sorted list----------------------
+plot.figure("figure 2.3")
+plot.plot(bubble_sort_test_reversed(500,10),label="bubble sort")
+plot.plot(bubble_sort2_test_reversed(500,10),label="bubble sort2")
+plot.xlabel("list length")
+plot.ylabel("time")
+plot.title("Bubble sort (reversed list)")
+plot.legend()
+plot.show()
+#----------------------sorted list------------------------------
+plot.figure("figure 2.4")
+plot.plot(bubble_sort_test_sorted(500,10),label="bubble sort")
+plot.plot(bubble_sort2_test_sorted(500,10),label="bubble sort2")
+plot.xlabel("list length")
+plot.ylabel("time")
+plot.title("Bubble sort (sorted list)")
+plot.legend()
 plot.show()
 
-'''
-selection_sort2 compare to old one
-1. max, min same time, reduce the swaps
-2. loop boundaries should updated, reduced the checking length
-3. did not use find_min, and did not create a seperate find_min_max, 
-because it would increase the function call(need call find_min_max many times).
-4. use min_val and max_val to store the current min/max value, instead of directly using L[min_i] and L[max_i]. 
-It reduce many array accessing which saves a lot of time, but may increase the memory space used. 
+#---------------------selection sort plot------------------
 
-'''
+#----------------------random list---------------------------
+plot.figure("figure 2.5")
+plot.plot(selection_sort_test_random(500,10),label="selection sort")
+plot.plot(selection_sort2_test_random(500,10),label="selection sort2")
+plot.xlabel("list length")
+plot.ylabel("time")
+plot.title("Selection sort (random list)")
+plot.legend()
+plot.show()
+#----------------------near sorted list----------------------
+plot.figure("figure 2.6")
+plot.plot(selection_sort_test_near(500,10),label="selection sort")
+plot.plot(selection_sort2_test_near(500,10),label="selection sort2")
+plot.xlabel("list length")
+plot.ylabel("time")
+plot.title("Selection sort (near sorted list)")
+plot.legend()
+plot.show()
+#---------------------reversed sorted list----------------------
+plot.figure("figure 2.7")
+plot.plot(selection_sort_test_reversed(500,10),label="selection sort")
+plot.plot(selection_sort2_test_reversed(500,10),label="selection sort2")
+plot.xlabel("list length")
+plot.ylabel("time")
+plot.title("Selection sort (reversed list)")
+plot.legend()
+plot.show()
 
-'''
-bubble_sort2 compare to old one
-1. create a flag, if no swap for one iteration at all, means already sorted, then return. 
-2. reduce swap by finding the better position to fit, move elements one by one, then insert to the position. 
-
-
-quesions: 
-naming for bubblesort2()/bubble_sort2()?
-
-An explicit outline of the experiments you ran. That is, list length values, how many “runs”?
-
-1. The experiments we did is sorting the list using the corresponding sorting algorithms with list length from 1 to 500, 
-for each length we create new random list 20 times and sort to take the average. So the result will be more accurate . 
-'''
+#----------------------sorted list---------------------------
+plot.figure("figure 2.8")
+plot.plot(selection_sort_test_sorted(500,10),label="selection sort")
+plot.plot(selection_sort2_test_sorted(500,10),label="selection sort2")
+plot.xlabel("list length")
+plot.ylabel("time")
+plot.title("Selection sort (sorted list)")
+plot.legend()
+plot.show()
