@@ -161,7 +161,7 @@ class Heap:
 
 
 
-num_runs = 10000
+num_runs = 50000
 
 def create_random_list(length, max_value):
     return [random.randint(0, max_value) for _ in range(length)]
@@ -174,6 +174,8 @@ heap_time  = []
 
 scale      = 200
 
+
+print(len (range (0, num_runs, scale)))
 for  i in range (0, num_runs, scale):
     L = create_random_list(i , i + 1)
 
@@ -207,7 +209,7 @@ plt.plot(lengths,heap_time ,label="Heap Sort")
 
 
 
-plt.legend(loc = "upper right")
+plt.legend(loc = "upper left")
 plt.title ('Length vs time')
 plt.xlabel('Length')
 plt.ylabel('time')
