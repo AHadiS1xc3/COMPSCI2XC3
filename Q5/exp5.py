@@ -177,7 +177,7 @@ def create_near_sorted_list(length, max_value, swaps):
 
 
 
-length  = 400
+length  = 1000 - 10
 num_runs = 500
 
 quick_times = []
@@ -191,6 +191,8 @@ swaps   = range (0,num_runs,scale)
 for i in swaps:
     L = create_near_sorted_list(length, length , i)
 
+
+    print (i)
     L_cop = L.copy()
     start = timeit.default_timer()
     quicksort(L)
