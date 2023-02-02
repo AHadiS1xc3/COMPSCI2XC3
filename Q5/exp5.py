@@ -177,8 +177,8 @@ def create_near_sorted_list(length, max_value, swaps):
 
 
 
-length  = 400
-num_runs = 500
+length  = 1000 - 100
+num_runs = 1000
 
 quick_times = []
 merge_times = []
