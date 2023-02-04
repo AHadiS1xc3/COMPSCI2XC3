@@ -158,59 +158,176 @@ class Heap:
 
 
 
-
-
-
-num_runs = 50000
+def swap(L, i, j):
+    L[i], L[j] = L[j], L[i]
 
 def create_random_list(length, max_value):
     return [random.randint(0, max_value) for _ in range(length)]
 
-
-
-quick_time = []
-merge_time = []
-heap_time  = []
-
-scale      = 200
-
-
-print(len (range (0, num_runs, scale)))
-for  i in range (0, num_runs, scale):
-    L = create_random_list(i , i + 1)
-
-
-    l_cop = L.copy()
-    start = timeit.default_timer()
-    quicksort(l_cop)
-    end   = timeit.default_timer() 
-    quick_time.append(end - start)
-    
-    l_cop = L.copy()
-    start = timeit.default_timer()
-    mergesort(l_cop)
-    end   = timeit.default_timer() 
-    merge_time.append(end - start)
-    
-    l_cop = L.copy()
-    start = timeit.default_timer()
-    heapsort(l_cop)
-    end   = timeit.default_timer() 
-    heap_time.append(end -  start)
-
-    print(i)
+# Creates a near sorted list by creating a random list, sorting it, then doing a random number of swaps
+def create_near_sorted_list(length, max_value, swaps):
+    L = create_random_list(length, max_value)
+    L.sort()
+    for _ in range(swaps):
+        r1 = random.randint(0, length - 1)
+        r2 = random.randint(0, length - 1)
+        swap(L, r1, r2)
+    return L
 
 
 
-lengths = range(0, num_runs ,scale )
-plt.plot(lengths,quick_time,label="Quick Sort")
-plt.plot(lengths,merge_time,label="Mege Sort")
-plt.plot(lengths,heap_time ,label="Heap Sort")
+
+
+def testsOnRand(num_runs,scale):
+
+    quick_time = []
+    merge_time = []
+    heap_time  = []
+
+    scale      = 200
 
 
 
-plt.legend(loc = "upper left")
-plt.title ('Length vs time')
-plt.xlabel('Length')
-plt.ylabel('time')
-plt.show()
+
+
+    #   
+    print(len (range (0, num_runs, scale)))
+
+    # TEST ON RANDOM LISTS
+    for  i in range (0, num_runs, scale):
+        L = create_random_list(i , i + 1)
+
+
+        l_cop = L.copy()
+        start = timeit.default_timer()
+        quicksort(l_cop)
+        end   = timeit.default_timer() 
+        quick_time.append(end - start)
+        
+        l_cop = L.copy()
+        start = timeit.default_timer()
+        mergesort(l_cop)
+        end   = timeit.default_timer() 
+        merge_time.append(end - start)
+        
+        l_cop = L.copy()
+        start = timeit.default_timer()
+        heapsort(l_cop)
+        end   = timeit.default_timer() 
+        heap_time.append(end -  start)
+        print(i)
+
+
+
+    lengths = range(0, num_runs ,scale )
+    plt.plot(lengths,quick_time,label="Quick Sort")
+    plt.plot(lengths,merge_time,label="Mege Sort")
+    plt.plot(lengths,heap_time ,label="Heap Sort")
+
+    plt.legend(loc = "upper left")
+    plt.title ('Length vs time (RANDOMLY GENERATED LISTS)')
+    plt.xlabel('Length')
+    plt.ylabel('time')
+    plt.show()
+
+    #_______________________________________________________
+
+def testOnNearSort (num_runs,scale, sorted_ness,string):
+    # TESTS ON NEAR SORTED LISTS 
+    quick_time = []
+    merge_time = []
+    heap_time  = []
+
+    for  i in range (0, num_runs, scale):
+        L = create_near_sorted_list(i,i, int (sorted_ness * i ))
+
+
+        l_cop = L.copy()
+        start = timeit.default_timer()
+        quicksort(l_cop)
+        end   = timeit.default_timer() 
+        quick_time.append(end - start)
+        
+        l_cop = L.copy()
+        start = timeit.default_timer()
+        mergesort(l_cop)
+        end   = timeit.default_timer() 
+        merge_time.append(end - start)
+        
+        l_cop = L.copy()
+        start = timeit.default_timer()
+        heapsort(l_cop)
+        end   = timeit.default_timer() 
+        heap_time.append(end -  start)
+        print(i)
+
+
+
+    lengths = range(0, num_runs ,scale )
+    plt.plot(lengths,quick_time,label="Quick Sort")
+    plt.plot(lengths,merge_time,label="Mege Sort")
+    plt.plot(lengths,heap_time ,label="Heap Sort")
+
+    plt.legend(loc = "upper left")
+    plt.title (string)
+    plt.xlabel('Length')
+    plt.ylabel('time')
+    plt.show()
+
+
+def testOnSorted (num_runs,scale,string):
+
+    # TESTS on SORTED LISTS
+    testOnNearSort(num_runs,scale,0,string)
+
+def testOnRevSorted (num_runs,scale):
+    # TESTS ON REVESED SORTED LISTS 
+    quick_time = []
+    merge_time = []
+    heap_time  = []
+
+    for  i in range (0, num_runs, scale):
+        L = list (reversed(create_near_sorted_list(i,i, 0)))
+
+
+        l_cop = L.copy()
+        start = timeit.default_timer()
+        quicksort(l_cop)
+        end   = timeit.default_timer() 
+        quick_time.append(end - start)
+        
+        l_cop = L.copy()
+        start = timeit.default_timer()
+        mergesort(l_cop)
+        end   = timeit.default_timer() 
+        merge_time.append(end - start)
+        
+        l_cop = L.copy()
+        start = timeit.default_timer()
+        heapsort(l_cop)
+        end   = timeit.default_timer() 
+        heap_time.append(end -  start)
+        print(i)
+
+
+
+    lengths = range(0, num_runs ,scale )
+    plt.plot(lengths,quick_time,label="Quick Sort")
+    plt.plot(lengths,merge_time,label="Mege Sort")
+    plt.plot(lengths,heap_time ,label="Heap Sort")
+
+    plt.legend(loc = "upper left")
+    plt.title ('Length vs time (REVERSE SORTED)')
+    plt.xlabel('Length')
+    plt.ylabel('time')
+    plt.show()
+
+
+num_runs = 10_000
+scale    = 200
+
+# RUNNING THE TESTS
+testsOnRand(num_runs,scale)
+testOnNearSort(num_runs,scale,0.04,'Length vs time (NEAR SORTED)')
+testOnSorted (980 ,3,'Length vs time (SORTED)')
+testOnRevSorted (980,3)

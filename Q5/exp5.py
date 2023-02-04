@@ -177,8 +177,8 @@ def create_near_sorted_list(length, max_value, swaps):
 
 
 
-length  = 1000 - 100
-num_runs = 1000
+length  =  500
+num_runs = 600
 
 quick_times = []
 merge_times = []
@@ -190,6 +190,8 @@ swaps   = range (0,num_runs,scale)
 
 for i in swaps:
     L = create_near_sorted_list(length, length , i)
+
+
 
 
     print (i)
@@ -216,7 +218,7 @@ plt.plot(swaps,quick_times,label="Quick Sort")
 plt.plot(swaps,merge_times,label="Mege Sort")
 plt.plot(swaps,heap_times ,label="Heap Sort")
 
-plt.legend(loc = "upper left")
+plt.legend(loc = "upper right")
 plt.title ('Swaps vs time')
 plt.xlabel('Swaps')
 plt.ylabel('time')
